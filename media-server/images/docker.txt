@@ -1,0 +1,1 @@
+# docker run -d --name media-server -v $(pwd):/usr/share/nginx/html:ro -p 3050:80 nginx:1.13

@@ -1,6 +1,6 @@
 export interface PhotoType {
-    id: number;
-    imagePath: string;
+    id: string;
+    imagePath: any;
     description: string;
 }
 

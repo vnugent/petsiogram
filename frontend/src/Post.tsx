@@ -9,7 +9,7 @@ export class Post extends React.PureComponent<PostType, {}> {
   render() {
     return (
       <Card>
-        <Image fluid={true} src={this.props.imagePath} onDoubleClick={() => this.props.onDoubleClick(this.props.id)} />
+        <Image fluid={true} src={'//localhost:3050/' + this.props.imagePath} onDoubleClick={() => this.props.onDoubleClick(this.props.id)} />
         <Card.Content>
           <Card.Meta>
             <Icon name="heart" size="large" /> {this.props.likes}
