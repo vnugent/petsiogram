@@ -1,0 +1,18 @@
+[
+    {
+        "imagePath": "george1.png",
+        "description": "What a lovely summer day in Portland"
+    },
+    {
+        "imagePath": "george2.png",
+        "description": "Hi! I'm George!"
+      },
+      {
+        "imagePath": "wilson.png",
+        "description": "Hola!"
+      },
+      {
+        "imagePath": "goldie1.jpg",
+        "description": "Goldie on vacation"
+      }
+]

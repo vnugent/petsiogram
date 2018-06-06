@@ -3,24 +3,27 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@types/react": "^16.3.14",
+    "axios": "^0.18.0",
+    "node-uuid": "^1.4.8",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
     "react-scripts-ts": "2.16.0",
     "semantic-ui-css": "^2.3.1",
-    "semantic-ui-react": "^0.80.0",
-    "serve": "^6.5.8",
+    "semantic-ui-react": "0.81.1",
     "typescript": "^2.8.3"
   },
   "scripts": {
     "start": "react-scripts-ts start",
     "build": "react-scripts-ts build",
     "test": "react-scripts-ts test --env=jsdom",
-    "eject": "react-scripts-ts eject"
+    "eject": "react-scripts-ts eject",
+    "app": "serve -s -n -p 8080 ./build"
   },
   "devDependencies": {
     "@types/jest": "^22.2.3",
     "@types/node": "^10.1.2",
-    "@types/react-dom": "^16.0.5"
+    "@types/react": "^16.3.14",
+    "@types/react-dom": "^16.0.5",
+    "serve": "7.2.0"
   }
 }

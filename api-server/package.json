@@ -1,0 +1,17 @@
+{
+  "name": "hapi-rest-mongo",
+  "version": "1.0.0",
+  "description": "Simple REST project with hapijs and mongodb.",
+  "main": "server.js",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "boom": "^4.2.0",
+    "hapi": "^16.1.0",
+    "joi": "^10.2.2",
+    "mongojs": "^2.4.0",
+    "node-uuid": "^1.4.7"
+  }
+}
