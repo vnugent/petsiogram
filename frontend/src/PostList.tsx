@@ -36,10 +36,10 @@ export class PostList extends React.PureComponent<PostListPropType, PostListStat
         this.setState({ error: true });
       });
 
-    this.timerID = setInterval(() => this.fetchLikesFromBackend(), 3000);
+    this.timerID = setInterval(() => this.fetchLikesFromBackend(), 5000);
   }
 
-  componentWillReceiveProps() {
+  componentWillUnmount() {
     clearInterval(this.timerID);
   }
 
@@ -52,7 +52,6 @@ export class PostList extends React.PureComponent<PostListPropType, PostListStat
   doubleClickHandler = (postId: any) => {
     console.log('Liking photo:', postId);
     const data = { media_id: postId, user_id: this.props.userId };
-    // this.updateLocalLikes(data);
     axios
       .post('http://localhost:3005/like', data)
       .then(response => {
@@ -66,15 +65,6 @@ export class PostList extends React.PureComponent<PostListPropType, PostListStat
   lookupLikes(mediaId: string) {
     const likeCounts = this.state.likeData;
     return likeCounts ? likeCounts.get(mediaId) : 0;
-  }
-
-  updateLocalLikes(data: any) {
-    const item = this.state.likeData.get(data.media_id);
-    if (item) {
-      item.count = item.count + 1;
-      console.log('#update local like', item);
-      this.setState({ likeData: this.state.likeData });
-    }
   }
 
   fetchLikesFromBackend() {
