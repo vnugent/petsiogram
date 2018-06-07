@@ -5,7 +5,7 @@ const uuid = require('node-uuid');
 const Joi = require('joi');
 
 const imageHelper = require('../imageHelper');
-const day0 = require('../../../media-server/images/data.json');
+const day0 = require('../../initial-data.json');
 
 exports.register = function (server, options, next) {
     const db = server.app.db;
