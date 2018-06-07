@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Grid } from 'semantic-ui-react';
 
 import { PostList } from './PostList';
-const uuid = require('node-uuid');
+const uuid = require('uuid');
 
 interface AppStateType {
     userId: string;

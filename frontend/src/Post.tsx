@@ -12,7 +12,7 @@ interface PostStateType {
 export class Post extends React.PureComponent<PostType, PostStateType> {
   static getDerivedStateFromProps(props: PostType, state: PostStateType) {
     console.log('# props, state', props, state);
-    return props.likes !== state.likes ? { likes: props.likes } : null;
+    return props.likes > state.likes ? { likes: props.likes } : null;
   }
   constructor(props: PostType) {
     super(props);
