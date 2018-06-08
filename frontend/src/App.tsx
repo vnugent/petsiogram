@@ -5,7 +5,7 @@ import { PostList } from './PostList';
 const uuid = require('uuid');
 
 interface AppStateType {
-    userId: string;
+  userId: string;
 }
 
 class App extends React.Component<{}, AppStateType> {

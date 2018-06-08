@@ -1,6 +1,7 @@
 import * as React from 'react';
 import axios from 'axios';
 
+import * as Config from './Config';
 import { Post } from './Post';
 import { PhotoType } from './types/PostType';
 
@@ -28,7 +29,7 @@ export class PostList extends React.PureComponent<PostListPropType, PostListStat
 
   componentDidMount() {
     axios
-      .get('http://localhost:3005/posts')
+      .get(`${Config.API_HOST}/posts`)
       .then(response => {
         this.setState({ posts: response.data, error: false });
       })
@@ -44,6 +45,9 @@ export class PostList extends React.PureComponent<PostListPropType, PostListStat
   }
 
   render() {
+    if (this.state.posts.length === 0) {
+      return <div>No posts found. Check media server.</div>;
+    }
     return this.state.posts.map(item => (
       <Post key={item.id} likes={this.lookupLikes(item.id)} {...item} onDoubleClick={this.doubleClickHandler} />
     ));
@@ -53,7 +57,7 @@ export class PostList extends React.PureComponent<PostListPropType, PostListStat
     console.log('Liking photo:', postId);
     const data = { media_id: postId, user_id: this.props.userId };
     axios
-      .post('http://localhost:3005/like', data)
+      .post(`${Config.API_HOST}/like`, data)
       .then(response => {
         console.log('## like data ', data);
       })
@@ -68,7 +72,7 @@ export class PostList extends React.PureComponent<PostListPropType, PostListStat
   }
 
   fetchLikesFromBackend() {
-    axios.get('http://localhost:3005/likes').then(response => {
+    axios.get(`${Config.API_HOST}/likes`).then(response => {
       const result = new Map(response.data.map((i: any) => [i._id, i.count]));
       this.setState({ likeData: result });
     });

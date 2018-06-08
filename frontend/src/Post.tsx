@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Card, Icon, Image } from 'semantic-ui-react';
 
+import * as Config from './Config';
 import { PhotoType, StatsType } from './types/PostType';
 
 type PostType = PhotoType & StatsType;
@@ -29,7 +30,7 @@ export class Post extends React.PureComponent<PostType, PostStateType> {
   render() {
     return (
       <Card>
-        <Image fluid={true} src={'//localhost:3050/' + this.props.imagePath} onDoubleClick={this.onLike} />
+        <Image fluid={true} src={Config.MEDIA_HOST + '/' + this.props.imagePath} onDoubleClick={this.onLike} />
         <Card.Content>
           <Card.Meta>
             <Icon name="heart" size="large" /> {this.state.likes}
