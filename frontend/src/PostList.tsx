@@ -28,15 +28,7 @@ export class PostList extends React.PureComponent<PostListPropType, PostListStat
   }
 
   componentDidMount() {
-    axios
-      .get(`${Config.API_HOST}/posts`)
-      .then(response => {
-        this.setState({ posts: response.data, error: false });
-      })
-      .catch(error => {
-        this.setState({ error: true });
-      });
-
+    this.fetchPostsFromBackend();
     this.timerID = setInterval(() => this.fetchLikesFromBackend(), 5000);
   }
 
@@ -45,13 +37,31 @@ export class PostList extends React.PureComponent<PostListPropType, PostListStat
   }
 
   render() {
-    if (this.state.posts.length === 0) {
-      return <div>No posts found. Check media server.</div>;
+    if (this.state.posts.length === 0 && !this.state.error) {
+      return (
+        <div>
+          No posts found. <p><button onClick={this.initializeDb}>Re-initialize sample posts</button></p>
+        </div>
+      );
     }
     return this.state.posts.map(item => (
       <Post key={item.id} likes={this.lookupLikes(item.id)} {...item} onDoubleClick={this.doubleClickHandler} />
     ));
   }
+
+  initializeDb = () => {
+    axios
+      .get(`${Config.API_HOST}/init`)
+      .then(response => {
+        console.log('Data init succeeded!');
+        this.fetchPostsFromBackend();
+        this.setState({ error: false });
+      })
+      .catch(error => {
+        console.log('Data init failed!');
+        this.setState({ error: true });
+      });
+  };
 
   doubleClickHandler = (postId: any) => {
     console.log('Liking photo:', postId);
@@ -71,10 +81,23 @@ export class PostList extends React.PureComponent<PostListPropType, PostListStat
     return likeCounts ? likeCounts.get(mediaId) : 0;
   }
 
+  fetchPostsFromBackend() {
+    axios
+      .get(`${Config.API_HOST}/posts`)
+      .then(response => {
+        this.setState({ posts: response.data, error: false });
+      })
+      .catch(error => {
+        this.setState({ error: true });
+      });
+  }
+
   fetchLikesFromBackend() {
     axios.get(`${Config.API_HOST}/likes`).then(response => {
-      const result = new Map(response.data.map((i: any) => [i._id, i.count]));
-      this.setState({ likeData: result });
+      if (response && response.data) {
+        const result = new Map(response.data.map((i: any) => [i._id, i.count]));
+        this.setState({ likeData: result });
+      }
     });
   }
 }
