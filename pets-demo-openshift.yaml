@@ -18,18 +18,33 @@ objects:
       selector:
         app: mongo
         deploymentconfig: mongo
+      strategy:
+        customParams:
+          command:
+          - /bin/sh
+          - -c
+          - sleep 30; echo slept for 30; /usr/bin/openshift-deploy
+        resources: {}
+        rollingParams:
+          intervalSeconds: 1
+          maxSurge: 25%
+          maxUnavailable: 25%
+          timeoutSeconds: 600
+          updatePeriodSeconds: 1
+        type: Rolling
       template:
         metadata:
           labels:
             app: mongo
             deploymentconfig: mongo
+            version: v1
         spec:
           containers:
             - env:
                 - name: MONGO_INITDB_DATABASE
                   value: pets
               image: mongo:3
-              imagePullPolicy: IfNotPresent
+              imagePullPolicy: Always
               name: mongo
               ports:
                 - containerPort: 27017
@@ -73,18 +88,33 @@ objects:
       selector:
         app: api-server
         deploymentconfig: api-server
+      strategy:
+        customParams:
+          command:
+          - /bin/sh
+          - -c
+          - sleep 30; echo slept for 30; /usr/bin/openshift-deploy
+        resources: {}
+        rollingParams:
+          intervalSeconds: 1
+          maxSurge: 25%
+          maxUnavailable: 25%
+          timeoutSeconds: 600
+          updatePeriodSeconds: 1
+        type: Rolling
       template:
         metadata:
           labels:
             app: api-server
             deploymentconfig: api-server
+            version: us-westcoast
         spec:
           containers:
             - env:
                 - name: DB_HOST
                   value: mongo-service
               image: vnguyen/pets-api-server:latest
-              imagePullPolicy: IfNotPresent
+              imagePullPolicy: Always
               name: pets-api-server
               ports:
                 - containerPort: 3005
@@ -129,15 +159,30 @@ objects:
       selector:
         app: media-server
         deploymentconfig: media-server
+      strategy:
+        customParams:
+          command:
+          - /bin/sh
+          - -c
+          - sleep 30; echo slept for 30; /usr/bin/openshift-deploy
+        resources: {}
+        rollingParams:
+          intervalSeconds: 1
+          maxSurge: 25%
+          maxUnavailable: 25%
+          timeoutSeconds: 600
+          updatePeriodSeconds: 1
+        type: Rolling
       template:
         metadata:
           labels:
             app: media-server
             deploymentconfig: media-server
+            version: us-westcoast
         spec:
           containers:
             - image: vnguyen/pets-media-server:latest
-              imagePullPolicy: IfNotPresent
+              imagePullPolicy: Always
               name: pets-media-server
               ports:
                 - containerPort: 8081
@@ -164,8 +209,6 @@ objects:
     metadata:
       labels:
         app: media-server
-      annotations:
-        template.openshift.io/expose-uri: "http://{.spec.host}"
       name: media-server
     spec:
       port:
@@ -184,11 +227,26 @@ objects:
       selector:
         app: frontend
         deploymentconfig: frontend
+      strategy:
+        customParams:
+          command:
+          - /bin/sh
+          - -c
+          - sleep 30; echo slept for 30; /usr/bin/openshift-deploy
+        resources: {}
+        rollingParams:
+          intervalSeconds: 1
+          maxSurge: 25%
+          maxUnavailable: 25%
+          timeoutSeconds: 600
+          updatePeriodSeconds: 1
+        type: Rolling
       template:
         metadata:
           labels:
             app: frontend
             deploymentconfig: frontend
+            version: v1.base
         spec:
           containers:
             - env:
@@ -197,13 +255,13 @@ objects:
               - name: MEDIA_HOST
                 value: 'http://media-server-${NAMESPACE}.${CLUSTER_DOMAIN}'
               image: vnguyen/pets-frontend:latest
-              imagePullPolicy: IfNotPresent
+              imagePullPolicy: Always
               name: pets-frontend
               ports:
                 - containerPort: 3000
                   protocol: TCP
           dnsPolicy: ClusterFirst
-          restartPolicy: Always
+          restartPolicy:  Always
   - apiVersion: v1
     kind: Service
     metadata:
