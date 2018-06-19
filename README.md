@@ -32,7 +32,7 @@ media-server-1-jw4b2    2/2       Running     0          1m
 mongo-1-deploy          1/2       Completed   0          2m
 mongo-1-hsssr           2/2       Running     0          1m
 ```
-If you look at OpenShift console, the deployments are stuck in In-progress.  Let's kill all proxy process associated with the deployer pod so that deployment can finish.
+If you look at OpenShift console, the deployments are stuck in In-progress.  Let's kill proxy process associated with the deployer pod so that the deployment can finish.
 ```
 # oc get pods|grep deplo[y]|awk '{print $1}'|xargs --no-run-if-empty -I {} oc rsh -c istio-proxy {} pkill -f istio
 ```
