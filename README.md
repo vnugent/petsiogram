@@ -15,7 +15,7 @@ Set up a new project
 ```
 Deploy the app
 ```
-# oc create -f pets-demo-openshift.yaml
+# curl https://raw.githubusercontent.com/vnugent/petsiogram/master/pets-demo-openshift.yaml | oc create -f -
 # oc new-app --template pets-demo --param NAMESPACE=$(oc project -q) --param CLUSTER_DOMAIN=<your cluster's public domain. Example: $(minishift ip).nip.io>
 ```
 Verify deployment pods are in Completed state and app pods are in Running state
