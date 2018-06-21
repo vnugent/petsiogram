@@ -246,7 +246,7 @@ objects:
           labels:
             app: frontend
             deploymentconfig: frontend
-            version: v1.base
+            version: v8-final
         spec:
           containers:
             - env:
