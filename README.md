@@ -37,4 +37,17 @@ If you look at OpenShift console, the deployments are stuck in In-progress.  Let
 # oc get pods|grep deplo[y]|awk '{print $1}'|xargs --no-run-if-empty -I {} oc rsh -c istio-proxy {} pkill -f istio
 ```
 
+```
+# oc expose service frontend media-server -l app=pets
+# oc expose service frontend  -l app=pets
+# oc expose service media-server -l app=pets
+```
+Expose new app endpoints and connect them to Istio ingress gateway
+Note: must expose servie in 'istio-system'
+```
+# oc project istio-system
+# oc expose service istio-ingressgateway --name pets-frontend --hostname=frontend-meow.openshift2.jonqe.lab.eng.bos.redhat.com --port=80
+# oc expose service istio-ingressgateway --name pets-apiserver --hostname=api-server-meow.openshift2.jonqe.lab.eng.bos.redhat.com --port=80
+```
+
 ## 2. On Kubernetes (TBD)

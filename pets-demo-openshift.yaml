@@ -38,6 +38,8 @@ objects:
             app: mongo
             deploymentconfig: mongo
             version: v1
+          annotations:
+            sidecar.istio.io/inject: "true"
         spec:
           containers:
             - env:
@@ -108,6 +110,8 @@ objects:
             app: api-server
             deploymentconfig: api-server
             version: us-westcoast
+          annotations:
+            sidecar.istio.io/inject: "true"
         spec:
           containers:
             - env:
@@ -179,6 +183,8 @@ objects:
             app: media-server
             deploymentconfig: media-server
             version: us-westcoast
+          annotations:
+            sidecar.istio.io/inject: "true"
         spec:
           containers:
             - image: vnguyen/pets-media-server:latest
@@ -246,7 +252,9 @@ objects:
           labels:
             app: frontend
             deploymentconfig: frontend
-            version: v8-final
+            version: v8
+          annotations:
+            sidecar.istio.io/inject: "true"
         spec:
           containers:
             - env:
