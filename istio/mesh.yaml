@@ -1,0 +1,69 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: frontend-gateway
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "frontend-${PROJECT}.${DOMAIN}"
+    - "api-server-${PROJECT}.${DOMAIN}"
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: frontend
+spec:
+  hosts:
+  - "frontend-${PROJECT}.${DOMAIN}"
+  gateways:
+  - frontend-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: frontend
+        subset: v8
+      weight: 75 
+    - destination:
+        host: frontend
+        subset: v9
+      weight: 25
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: frontend-ab
+spec:
+  host: frontend
+  subsets:
+  - name: v8
+    labels:
+      version: v8
+  - name: v9
+    labels:
+      version: v9-pilot
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: api-server
+spec:
+  hosts:
+  - "api-server-${PROJECT}.${DOMAIN}"
+  gateways:
+  - frontend-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: api-server
