@@ -8,15 +8,19 @@ Prerequisites: OpenShift 3.9, Istio 3.8 and Kiali.  Due to a known bug with Isti
 
 Set up a new project
 ```
-# oc new-project pets
-# oc adm policy add-scc-to-user privileged -z default,deployer
-# oc adm policy add-scc-to-user anyuid -z default,deployer 
-# oc label namespace $(oc project -q) istio-injection=enabled
+oc new-project pets
+# Save project name and cluster domain to env variables for later 
+export PROJECT=$(oc project -q)
+export DOMAIN=<your cluster's public domain or the following if you're running minishift: $(minishift ip).nip.io>
+# Additional privileges
+oc adm policy add-scc-to-user privileged -z default,deployer
+oc adm policy add-scc-to-user anyuid -z default,deployer 
+oc label namespace $(oc project -q) istio-injection=enabled
 ```
 Deploy the app
 ```
 # curl https://raw.githubusercontent.com/vnugent/petsiogram/master/pets-demo-openshift.yaml | oc create -f -
-# oc new-app --template pets-demo --param NAMESPACE=$(oc project -q) --param CLUSTER_DOMAIN=<your cluster's public domain. Example: $(minishift ip).nip.io>
+# oc new-app --template pets-demo --param NAMESPACE=$PROJECT --param CLUSTER_DOMAIN=$DOMAIN
 ```
 Verify deployment pods are in Completed state and app pods are in Running state
 ```
@@ -32,22 +36,34 @@ media-server-1-jw4b2    2/2       Running     0          1m
 mongo-1-deploy          1/2       Completed   0          2m
 mongo-1-hsssr           2/2       Running     0          1m
 ```
-If you look at OpenShift console, the deployments are stuck in In-progress.  Let's kill proxy process associated with the deployer pod so that the deployment can finish.
+Verify you can view the app in the browser before moving on to setting up service mesh.  To find out public url for the React app:
 ```
-# oc get pods|grep deplo[y]|awk '{print $1}'|xargs --no-run-if-empty -I {} oc rsh -c istio-proxy {} pkill -f istio
+# oc get route frontend
 ```
 
+SETUP SERVICE MESH
+
+We are now ready to setup Istio Ingress gateway to handle incoming traffic.
+
+Delete existing OpenShift test routes
 ```
-# oc expose service frontend media-server -l app=pets
+# oc delete route api-server frontend
+```
+In case you want to re-enable them for debugging:
+```
+# oc expose service api-server -l app=pets
 # oc expose service frontend  -l app=pets
-# oc expose service media-server -l app=pets
+```
+Setup service mesh.  Note: istioctl command isn't aware of your current OpenShift namespace.  You should always specific -n <namespace>
+```
+# envsubst '${PROJECT} ${DOMAIN}' < istio/mesh.yaml | istioctl -n $PROJECT -f -
 ```
 Expose new app endpoints and connect them to Istio ingress gateway
-Note: must expose servie in 'istio-system'
+Note: `-n istio-system` is needed because the route needs to be in istio-system namespace in order to access ingress gateway service
 ```
-# oc project istio-system
-# oc expose service istio-ingressgateway --name pets-frontend --hostname=frontend-meow.openshift2.jonqe.lab.eng.bos.redhat.com --port=80
-# oc expose service istio-ingressgateway --name pets-apiserver --hostname=api-server-meow.openshift2.jonqe.lab.eng.bos.redhat.com --port=80
+# oc expose service istio-ingressgateway --name pets-frontend --hostname=frontend-${PROJECT}.${DOMAIN} --port=80 -n istio-system
+# oc expose service istio-ingressgateway --name pets-apiserver --hostname=api-server-${PROJECT}.${DOMAIN} --port=80 -n istio-system
 ```
+
 
 ## 2. On Kubernetes (TBD)

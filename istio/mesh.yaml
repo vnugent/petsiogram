@@ -11,8 +11,8 @@ spec:
       name: http
       protocol: HTTP
     hosts:
-    - "frontend-meow.openshift2.jonqe.lab.eng.bos.redhat.com"
-    - "api-server-meow.openshift2.jonqe.lab.eng.bos.redhat.com"
+    - "frontend-${PROJECT}.${DOMAIN}"
+    - "api-server-${PROJECT}.${DOMAIN}"
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
@@ -20,7 +20,7 @@ metadata:
   name: frontend
 spec:
   hosts:
-  - "frontend-meow.openshift2.jonqe.lab.eng.bos.redhat.com"
+  - "frontend-${PROJECT}.${DOMAIN}"
   gateways:
   - frontend-gateway
   http:
@@ -36,7 +36,7 @@ spec:
         host: frontend
         subset: v9
       weight: 25
---
+---
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
@@ -57,7 +57,7 @@ metadata:
   name: api-server
 spec:
   hosts:
-  - "api-server-meow.openshift2.jonqe.lab.eng.bos.redhat.com"
+  - "api-server-${PROJECT}.${DOMAIN}"
   gateways:
   - frontend-gateway
   http:

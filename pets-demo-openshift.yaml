@@ -270,6 +270,54 @@ objects:
                   protocol: TCP
           dnsPolicy: ClusterFirst
           restartPolicy:  Always
+  - kind: DeploymentConfig
+    apiVersion: v1
+    metadata:
+      labels:
+        app: frontend
+      name: frontend-v9-pilot
+    spec:
+      replicas: 1
+      selector:
+        app: frontend
+        deploymentconfig: frontend-v9-pilot
+      strategy:
+        customParams:
+          command:
+          - /bin/sh
+          - -c
+          - sleep 30; echo slept for 30; /usr/bin/openshift-deploy
+        resources: {}
+        rollingParams:
+          intervalSeconds: 1
+          maxSurge: 25%
+          maxUnavailable: 25%
+          timeoutSeconds: 600
+          updatePeriodSeconds: 1
+        type: Rolling
+      template:
+        metadata:
+          labels:
+            app: frontend
+            deploymentconfig: frontend-v9-pilot
+            version: v9-pilot
+          annotations:
+            sidecar.istio.io/inject: "true"
+        spec:
+          containers:
+            - env:
+              - name: API_HOST
+                value: 'http://api-server-${NAMESPACE}.${CLUSTER_DOMAIN}'
+              - name: MEDIA_HOST
+                value: 'http://media-server-${NAMESPACE}.${CLUSTER_DOMAIN}'
+              image: vnguyen/pets-frontend:latest
+              imagePullPolicy: Always
+              name: pets-frontend
+              ports:
+                - containerPort: 3000
+                  protocol: TCP
+          dnsPolicy: ClusterFirst
+          restartPolicy:  Always
   - apiVersion: v1
     kind: Service
     metadata:
