@@ -2,9 +2,13 @@
 Petsiogram, a fictional pet photo sharing app, demonstrates the use [Istio](https://istio.io/) and [Kiali](https://kiali.org) to manage and visualize your microservices app.
 
 ![microservices diagam](Pets-demo.png)
+
+Once the app is deployed you can view your service mesh in Kiali.  The service mesh includes a simple [A-B testing scenario](https://istio.io/docs/concepts/traffic-management/rules-configuration/#split-traffic-between-service-versions) - request for frontend React app is split between v8 and v9-pilot.  See [istio/mesh.yaml](istio/mesh.yaml#L31) for more info.
+
+![Kiali view without traffic](pets-a-b.png)
 # How to deploy
 ## 1. On Openshift 
-Prerequisites: OpenShift 3.9, Istio 3.8 and Kiali.  Due to a known bug with Istio/Envoy you need to perform additional clean up steps (included in this readme).  See this [blog post](https://developers.redhat.com/blog/2018/04/05/coolstore-microservices-service-mesh-part-1-exploring-auto-injection/) for more information.
+Prerequisites: OpenShift 3.9, Istio 3.8 and Kiali
 
 Set up a new project
 ```
