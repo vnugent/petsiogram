@@ -6,6 +6,7 @@ body {
 }
 
 #root {
+  background-color: mediumorchid;
   background-image: url('/images/vintage-floral-background-pattern.jpg');
   height: 100%;
 }
