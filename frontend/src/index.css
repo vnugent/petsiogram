@@ -2,5 +2,6 @@ html, body, #root
 {
 	/* we don't want any of these to scroll */
 	overflow: hidden;
-	height: 100%;
+    height: 100%;
+    background-image: url("/images/vintage-floral-background-pattern.jpg");
 }

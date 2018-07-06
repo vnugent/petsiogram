@@ -19,9 +19,7 @@ class App extends React.Component<{}, AppStateType> {
   public render() {
     return (
       <Grid>
-        <Grid.Column mobile={16} tablet={8} computer={4}>
-          <PostList userId={this.state.userId} />
-        </Grid.Column>
+        <PostList userId={this.state.userId} />
       </Grid>
     );
   }
