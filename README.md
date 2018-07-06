@@ -1,25 +1,20 @@
 # Pet Photo sharing app
 Petsiogram, a fictional pet photo sharing app, demonstrates the use [Istio](https://istio.io/) and [Kiali](https://kiali.org) to manage and visualize your microservices app.
 
-![microservices diagam](Pets-demo.png)
+![microservices diagam](pets-diagram-paper.jpeg)
 
-Once the app is deployed you can view your service mesh in Kiali.  The service mesh includes a simple [A-B testing scenario](https://istio.io/docs/concepts/traffic-management/rules-configuration/#split-traffic-between-service-versions) - request for frontend React app is split between v8 and v9-pilot.  See [istio/mesh.yaml](istio/mesh.yaml#L31) for more info.
+Once the app is deployed you can view its service mesh in Kiali.  The service mesh includes a simple [A-B testing scenario](istio/mesh.yaml#L31) - incoming request for frontend React app is split between v8 and v9-pilot.
 
-![Kiali view without traffic](pets-a-b.png)
-# How to deploy
-## 1. On Openshift 
+![Kiali view without traffic](kiali-pets-sprint7.png)
+# How to deploy On Openshift 
 Prerequisites: OpenShift 3.9, Istio 3.8 and Kiali
 
-Set up a new project
+## 1. Deploy the app
 ```
 oc new-project pets
 # Save project name and cluster domain to env variables for later 
 export PROJECT=$(oc project -q)
 export DOMAIN=<your cluster's public domain or the following if you're running minishift: $(minishift ip).nip.io>
-# Additional privileges
-oc adm policy add-scc-to-user privileged -z default,deployer
-oc adm policy add-scc-to-user anyuid -z default,deployer 
-oc label namespace $(oc project -q) istio-injection=enabled
 ```
 Deploy the app
 ```
@@ -44,8 +39,7 @@ Verify you can view the app in the browser before moving on to setting up servic
 ```
 # oc get route frontend
 ```
-
-SETUP SERVICE MESH
+##2. Create Istio service mesh
 
 We are now ready to setup Istio Ingress gateway to handle incoming traffic.
 
