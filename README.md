@@ -3,20 +3,20 @@ Petsiogram, a fictional pet photo sharing app, demonstrates the use [Istio](http
 
 ![microservices diagam](pets-diagram-paper.jpeg)
 
-Once the app is deployed you can view its service mesh in Kiali.  The service mesh includes a simple [A-B testing scenario](istio/mesh.yaml#L31) - incoming request for frontend React app is split between v8 and v9-pilot.
+Once the app is deployed you can view its service mesh in Kiali.  The service mesh includes a simple [A-B testing scenario](istio/mesh.yaml#L31) - request for the React frontend app is split between v8 and v9-pilot.
 
 ![Kiali view without traffic](kiali-pets-sprint7.png)
-# How to deploy On Openshift 
+# Openshift 
 Prerequisites: OpenShift 3.9, Istio 3.8 and Kiali
 
-## 1. Deploy the app
+## 1. Prepare the app
 ```
 oc new-project pets
-# Save project name and cluster domain to env variables for later 
+# Save project name and cluster domain for later 
 export PROJECT=$(oc project -q)
 export DOMAIN=<your cluster's public domain or the following if you're running minishift: $(minishift ip).nip.io>
 ```
-Deploy the app
+Deploy
 ```
 # curl https://raw.githubusercontent.com/vnugent/petsiogram/master/pets-demo-openshift.yaml | oc create -f -
 # oc new-app --template pets-demo --param NAMESPACE=$PROJECT --param CLUSTER_DOMAIN=$DOMAIN
@@ -39,7 +39,7 @@ Verify you can view the app in the browser before moving on to setting up servic
 ```
 # oc get route frontend
 ```
-##2. Create Istio service mesh
+## 2. Create Istio service mesh
 
 We are now ready to setup Istio Ingress gateway to handle incoming traffic.
 
@@ -52,11 +52,11 @@ In case you want to re-enable them for debugging:
 # oc expose service api-server -l app=pets
 # oc expose service frontend  -l app=pets
 ```
-Setup service mesh.  Note: istioctl command isn't aware of your current OpenShift namespace.  You should always specific -n <namespace>
+Setup service mesh.  Note: istioctl command isn't aware of your current OpenShift namespace.  You should always specify `-n <namespace>`
 ```
 # envsubst '${PROJECT} ${DOMAIN}' < istio/mesh.yaml | istioctl -n $PROJECT -f -
 ```
-Expose new app endpoints and connect them to Istio ingress gateway
+Expose gateway endpoints as OpenShift routes
 Note: `-n istio-system` is needed because the route needs to be in istio-system namespace in order to access ingress gateway service
 ```
 # oc expose service istio-ingressgateway --name pets-frontend --hostname=frontend-${PROJECT}.${DOMAIN} --port=80 -n istio-system
@@ -64,4 +64,4 @@ Note: `-n istio-system` is needed because the route needs to be in istio-system 
 ```
 
 
-## 2. On Kubernetes (TBD)
+# Kubernetes (TBD)
