@@ -310,7 +310,7 @@ objects:
                 value: 'http://api-server-${NAMESPACE}.${CLUSTER_DOMAIN}'
               - name: MEDIA_HOST
                 value: 'http://media-server-${NAMESPACE}.${CLUSTER_DOMAIN}'
-              image: vnguyen/pets-frontend:latest
+              image: vnguyen/pets-frontend:v9-pilot
               imagePullPolicy: Always
               name: pets-frontend
               ports:
